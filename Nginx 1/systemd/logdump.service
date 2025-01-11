@@ -1,0 +1,14 @@
+[Unit]
+Description=Log Dump Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/log/nginx/dump
+ExecStart=sudo /var/log/nginx/logdump.sh
+Restart=always
+RestartSec=5
+
+
+[Install]
+WantedBy=multi-user.target
