@@ -1,0 +1,32 @@
+SYSTEM=${CLI_INSTALL_SYSTEM:-$(uname -s)}
+
+case ${SYSTEM} in
+    Linux | GNU/Linux)
+        echo "linux"
+
+        declare -A osInfo;
+        osInfo[/etc/redhat-release]=dnf/yum/[rpm]
+        osInfo[/etc/arch-release]=pacman
+        osInfo[/etc/gentoo-release]=emerge
+        osInfo[/etc/SuSE-release]=zypp
+        osInfo[/etc/debian_version]=apt-get
+        osInfo[/etc/alpine-release]=apk
+
+        for f in ${!osInfo[@]}
+        do
+            if [[ -f $f ]];then
+                echo Package manager: ${osInfo[$f]}
+            fi
+        done
+        ;;
+    Darwin)
+        echo "darwin"
+        ;;
+    CYGWIN* | MINGW* | MSYS* | Windows_NT | WindowsNT )
+        echo "windows"
+        ;;
+    *)
+        echo "os recognition failed"
+        exit 1
+        ;;
+esac
