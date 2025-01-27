@@ -1,0 +1,47 @@
+#cloud-config
+users:
+  - name: patronogen
+    groups: sudo
+    shell: /bin/bash
+    sudo: 'ALL=(ALL) NOPASSWD:ALL'
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8tnMZoRrDxJdPlxB2rLIG0WBMCAORXuORYattkPEnt patronogen@cattle5devoid
+
+    ssh-keys: {ed25519_private: '-----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+      QyNTUxOQAAACC/LZzGaEaw8SXT5cQdqyyBtFgTAgDkV7jkWGrbZDxJ7QAAAKD2EuJk9hLi
+      ZAAAAAtzc2gtZWQyNTUxOQAAACC/LZzGaEaw8SXT5cQdqyyBtFgTAgDkV7jkWGrbZDxJ7Q
+      AAAEAefRxGtXbNwxNB9Df77pe2SY1LF50EmOkWfIeRrnihDL8tnMZoRrDxJdPlxB2rLIG0
+      WBMCAORXuORYattkPEntAAAAGHBhdHJvbm9nZW5AY2F0dGxlNWRldm9pZAECAwQF
+      -----END OPENSSH PRIVATE KEY-----
+      ', ed25519_public: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8tnMZoRrDxJdPlxB2rLIG0WBMCAORXuORYattkPEnt patronogen@cattle5devoid
+    }
+runcmd: 
+  - |
+    mkdir -p /home/patronogen/.ssh && touch /home/patronogen/.ssh/key /home/patronogen/.ssh/key.pub
+  - |
+    echo <<-EOF \
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8tnMZoRrDxJdPlxB2rLIG0WBMCAORXuORYattkPEnt patronogen@cattle5devoid \
+    \
+    EOF > /home/patronogen/.ssh/key.pub
+  - |
+    echo <<-EOF
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+    QyNTUxOQAAACC/LZzGaEaw8SXT5cQdqyyBtFgTAgDkV7jkWGrbZDxJ7QAAAKD2EuJk9hLi
+    ZAAAAAtzc2gtZWQyNTUxOQAAACC/LZzGaEaw8SXT5cQdqyyBtFgTAgDkV7jkWGrbZDxJ7Q
+    AAAEAefRxGtXbNwxNB9Df77pe2SY1LF50EmOkWfIeRrnihDL8tnMZoRrDxJdPlxB2rLIG0
+    WBMCAORXuORYattkPEntAAAAGHBhdHJvbm9nZW5AY2F0dGxlNWRldm9pZAECAwQF
+    -----END OPENSSH PRIVATE KEY-----
+    
+    EOF > /home/patronogen/.ssh/key
+  - |
+    chmod 600 /home/patronogen/.ssh/key
+  - |
+    chmod 644 /home/patronogen/.ssh/key.pub
+  - |
+    echo <<-EOF
+    Host *
+      IdentityFile /home/patronogen/.ssh/key
+      StrictHostKeyChecking no
+    EOF > /home/patronogen/.ssh/config

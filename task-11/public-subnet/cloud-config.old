@@ -1,0 +1,24 @@
+          ssh-keys: {ed25519_private: '***', ed25519_public: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8tnMZoRrDxJdPlxB2rLIG0WBMCAORXuORYattkPEnt patronogen@cattle5devoid
+          }
+          
+      runcmd: 
+        - |
+          mkdir -p /home/${local.vm_user}/.ssh && touch /home/${local.vm_user}/.ssh/key /home/${local.vm_user}/.ssh/key.pub
+        - |
+          echo <<-EOF 
+          ${file("${var.ssh_pub_key_path}")}
+          EOF > /home/${local.vm_user}/.ssh/key.pub
+        - |
+          echo <<-EOF
+          ${join("\n    ", split("\n",file("${var.ssh_private_key_path}")))}
+          EOF > /home/${local.vm_user}/.ssh/key
+        - |
+          chmod 600 /home/${local.vm_user}/.ssh/key
+        - |
+          chmod 644 /home/${local.vm_user}/.ssh/key.pub
+        - |
+          echo <<-EOF
+          Host *
+            IdentityFile /home/${local.vm_user}/.ssh/key
+            StrictHostKeyChecking no
+          EOF > /home/${local.vm_user}/.ssh/config
