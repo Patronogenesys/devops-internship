@@ -1,0 +1,20 @@
+
+services:
+  nginx:
+    image: patronogenesys/mynginx:latest
+    container_name: nginx
+    volumes:
+      - /home/patronogen/devops-internship/.secret/ssl/patronogen.ru:/ssl/patronogen.ru
+    ports:
+      - 80:8080
+      - 443:8443
+    networks:
+      - app
+  apache:
+    image: patronogenesys/myapache
+    networks:
+      - app
+      
+networks:
+  app:
+    driver: bridge
