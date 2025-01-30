@@ -1,2 +1,3 @@
 .secret/*
 */.terraform
+*.code-workspace

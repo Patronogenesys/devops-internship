@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+import smtplib
+
+FROM = 'sender@ya.ru'
+
+TO = ["mail@ya.ru"]
+
+SUBJECT = "Commit"
+
+TEXT = "Commit has been done"
+
+# Prepare actual message
+
+message = """\
+From: %s
+To: %s
+Subject: %s
+
+%s
+""" % (FROM, ", ".join(TO), SUBJECT, TEXT)
+
+# Send the mail
+
+server = smtplib.SMTP_SSL('smtp.yandex.ru', 465)
+server.ehlo("login")
+server.login("login", "password")
+server.sendmail(FROM, TO, message)
+server.quit()
